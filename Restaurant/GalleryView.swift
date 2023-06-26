@@ -10,6 +10,8 @@ import SwiftUI
 struct GalleryView: View {
     
     @State var photoData:[String] = [String]()
+    @State var sheetVisible: Bool = false
+    @State var selectedPhoto: String = ""
     var dataService = DataService()
     
     var body: some View {
@@ -31,6 +33,10 @@ struct GalleryView: View {
                                 .aspectRatio(contentMode: .fill)
                                 .frame(maxWidth: (proxy.size.width-20)/3)
                                 .clipped()
+                                .onTapGesture {
+                                    selectedPhoto = p
+                                    sheetVisible.toggle()
+                                }
                         }
                     }
                 }
@@ -39,6 +45,10 @@ struct GalleryView: View {
         .padding(.horizontal)
         .onAppear {
             photoData = dataService.getPhotos()
+        }
+        .sheet(isPresented: $sheetVisible) {
+            PhotoView(selectedPhoto: $selectedPhoto,
+                      sheetVisible: $sheetVisible)
         }
         
     }
